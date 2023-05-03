@@ -22,7 +22,14 @@ app.get('/', (req, res) => {
 //Middleware
 app.use(express.json());
 
-app.use(cors(corsOptions));
+app.use(
+	cors({
+		origin: 'https://mate-ai.onrender.com', // allow requests from this origin
+		methods: ['GET', 'POST', 'PUT', 'DELETE'], // allow these HTTP methods
+		allowedHeaders: ['Content-Type', 'Authorization'], // allow these headers
+		credentials: true, // allow cookies and authentication headers
+	})
+);
 //Users route
 app.use('/api/users', userRoutes);
 //Post route
