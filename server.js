@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.use(
 	cors({
-		origin: 'https://mate-ai.onrender.com', // allow requests from this origin
+		origin: '*', // allow requests from this origin
 		methods: ['GET', 'POST', 'PUT', 'DELETE'], // allow these HTTP methods
 		allowedHeaders: ['Content-Type', 'Authorization'], // allow these headers
 		credentials: true, // allow cookies and authentication headers
@@ -43,17 +43,6 @@ app.use('/api/category', categoryRoute);
 //err handler
 app.use(notFound);
 app.use(errorHandler);
-
-app.all('*', (req, res) => {
-	res.status(404);
-	if (req.accepts('html')) {
-		res.sendFile(path.join(__dirname, 'views', '404.html'));
-	} else if (req.accepts('json')) {
-		res.json({ message: '404 Not Found' });
-	} else {
-		res.type('txt').send('404 Not Found');
-	}
-});
 
 //server
 const PORT = process.env.PORT || 5000;
