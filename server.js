@@ -10,15 +10,19 @@ const postRoute = require('./route/posts/postRoute');
 const commentRoutes = require('./route/comments/commentRoute');
 const emailMsgRoute = require('./route/emailMsg/emailMsgRoute');
 const categoryRoute = require('./route/category/categoryRoute');
+const corsOptions = require('./config/corsOptions');
 
 const app = express();
 //DB
 dbConnect();
+app.get('/', (req, res) => {
+	res.json({ msg: 'API for blog Application...' });
+});
 
 //Middleware
 app.use(express.json());
 
-app.use(cors());
+app.use(cors(corsOptions));
 //Users route
 app.use('/api/users', userRoutes);
 //Post route
@@ -32,6 +36,17 @@ app.use('/api/category', categoryRoute);
 //err handler
 app.use(notFound);
 app.use(errorHandler);
+
+app.all('*', (req, res) => {
+	res.status(404);
+	if (req.accepts('html')) {
+		res.sendFile(path.join(__dirname, 'views', '404.html'));
+	} else if (req.accepts('json')) {
+		res.json({ message: '404 Not Found' });
+	} else {
+		res.type('txt').send('404 Not Found');
+	}
+});
 
 //server
 const PORT = process.env.PORT || 5000;
